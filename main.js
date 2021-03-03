@@ -14,6 +14,7 @@ addEventListener('submit', (e) => {
         return response.json();
     }).then(function(response) {
         if(response.data.length === 0) {
+            img.src = 'no-image.png';
             throw new TypeError('No gifs found!');
         } else {
             img.src = response.data.images.original.url;
