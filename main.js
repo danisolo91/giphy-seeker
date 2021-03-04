@@ -4,22 +4,27 @@ const img = document.querySelector('img');
 
 img.src = 'no-image.png';
 
-addEventListener('submit', (e) => {
-    e.preventDefault();
-    let searchTerm = searchBox.value;
+form.addEventListener('submit', handleSubmit);
 
-    fetch('https://api.giphy.com/v1/gifs/translate?api_key=AVpgB59XEYsPu80ZpPNkiPtvvjCuLSrf&s=' + searchTerm, {
-        mode: 'cors'
-    }).then(function(response) {
-        return response.json();
-    }).then(function(response) {
-        if(response.data.length === 0) {
+async function handleSubmit(e) {
+    try {
+        e.preventDefault();
+        
+        let searchTerm = searchBox.value;
+
+        let response = await fetch('https://api.giphy.com/v1/gifs/translate?api_key=AVpgB59XEYsPu80ZpPNkiPtvvjCuLSrf&s=' + searchTerm, {
+            mode: 'cors'
+        });
+
+        let gifData = await response.json();
+
+        if(gifData.data.length === 0) {
             img.src = 'no-image.png';
             throw new TypeError('No gifs found!');
         } else {
-            img.src = response.data.images.original.url;
+            img.src = gifData.data.images.original.url;
         }
-    }).catch(function(error) {
+    } catch(error) {
         console.log(error);
-    });
-});
+    }
+};
